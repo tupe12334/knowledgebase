@@ -4,5 +4,7 @@ import { UserUpdateManyWithoutTopicsInput } from "./UserUpdateManyWithoutTopicsI
 export type TopicUpdateInput = {
   dependOn?: TopicUpdateManyWithoutTopicsInput;
   dependOnMe?: TopicUpdateManyWithoutTopicsInput;
+  description?: string | null;
   knownUsers?: UserUpdateManyWithoutTopicsInput;
+  title?: string | null;
 };
