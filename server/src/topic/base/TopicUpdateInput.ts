@@ -14,6 +14,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { TopicUpdateManyWithoutTopicsInput } from "./TopicUpdateManyWithoutTopicsInput";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
+import { UserUpdateManyWithoutTopicsInput } from "./UserUpdateManyWithoutTopicsInput";
 @InputType()
 class TopicUpdateInput {
   @ApiProperty({
@@ -39,5 +40,17 @@ class TopicUpdateInput {
     nullable: true,
   })
   dependOnMe?: TopicUpdateManyWithoutTopicsInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserUpdateManyWithoutTopicsInput,
+  })
+  @ValidateNested()
+  @Type(() => UserUpdateManyWithoutTopicsInput)
+  @IsOptional()
+  @Field(() => UserUpdateManyWithoutTopicsInput, {
+    nullable: true,
+  })
+  knownUsers?: UserUpdateManyWithoutTopicsInput;
 }
 export { TopicUpdateInput };

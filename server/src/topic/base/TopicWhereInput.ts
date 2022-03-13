@@ -15,6 +15,7 @@ import { TopicListRelationFilter } from "./TopicListRelationFilter";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
 import { StringFilter } from "../../util/StringFilter";
+import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 @InputType()
 class TopicWhereInput {
   @ApiProperty({
@@ -51,5 +52,17 @@ class TopicWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => UserListRelationFilter)
+  @IsOptional()
+  @Field(() => UserListRelationFilter, {
+    nullable: true,
+  })
+  knownUsers?: UserListRelationFilter;
 }
 export { TopicWhereInput };

@@ -8,14 +8,15 @@ generator client {
 }
 
 model User {
-  createdAt DateTime @default(now())
-  firstName String?
-  id        String   @id @default(cuid())
-  lastName  String?
-  password  String
-  roles     String[]
-  updatedAt DateTime @updatedAt
-  username  String   @unique
+  createdAt   DateTime @default(now())
+  firstName   String?
+  id          String   @id @default(cuid())
+  knownTopics Topic[]
+  lastName    String?
+  password    String
+  roles       String[]
+  updatedAt   DateTime @updatedAt
+  username    String   @unique
 }
 
 model Topic {
@@ -23,5 +24,6 @@ model Topic {
   dependOn   Topic[]  @relation(name: "dependOn")
   dependOnMe Topic[]  @relation(name: "dependOn")
   id         String   @id @default(cuid())
+  knownUsers User[]
   updatedAt  DateTime @updatedAt
 }

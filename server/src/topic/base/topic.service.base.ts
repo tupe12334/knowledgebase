@@ -10,7 +10,7 @@ https://docs.amplication.com/docs/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "nestjs-prisma";
-import { Prisma, Topic } from "@prisma/client";
+import { Prisma, Topic, User } from "@prisma/client";
 
 export class TopicServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -67,5 +67,16 @@ export class TopicServiceBase {
         where: { id: parentId },
       })
       .dependOnMe(args);
+  }
+
+  async findKnownUsers(
+    parentId: string,
+    args: Prisma.UserFindManyArgs
+  ): Promise<User[]> {
+    return this.prisma.topic
+      .findUnique({
+        where: { id: parentId },
+      })
+      .knownUsers(args);
   }
 }

@@ -25,6 +25,8 @@ import { DeleteTopicArgs } from "./DeleteTopicArgs";
 import { TopicFindManyArgs } from "./TopicFindManyArgs";
 import { TopicFindUniqueArgs } from "./TopicFindUniqueArgs";
 import { Topic } from "./Topic";
+import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
+import { User } from "../../user/base/User";
 import { TopicService } from "../topic.service";
 
 @graphql.Resolver(() => Topic)
@@ -248,6 +250,32 @@ export class TopicResolverBase {
       resource: "Topic",
     });
     const results = await this.service.findDependOnMe(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results.map((result) => permission.filter(result));
+  }
+
+  @graphql.ResolveField(() => [User])
+  @nestAccessControl.UseRoles({
+    resource: "Topic",
+    action: "read",
+    possession: "any",
+  })
+  async knownUsers(
+    @graphql.Parent() parent: Topic,
+    @graphql.Args() args: UserFindManyArgs,
+    @gqlUserRoles.UserRoles() userRoles: string[]
+  ): Promise<User[]> {
+    const permission = this.rolesBuilder.permission({
+      role: userRoles,
+      action: "read",
+      possession: "any",
+      resource: "User",
+    });
+    const results = await this.service.findKnownUsers(parent.id, args);
 
     if (!results) {
       return [];
