@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "3.5.10",
+    "apollo-client": "2.6.10",
+    "graphql": "15.8.0",
     "react": "16.14.0",
     "react-digraph": "8.0.0-beta.7",
     "react-dom": "16.14.0",
