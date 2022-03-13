@@ -28,6 +28,7 @@ import { Topic } from "./Topic";
 import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
 import { TopicService } from "../topic.service";
+import { Public } from "src/auth/public";
 
 @graphql.Resolver(() => Topic)
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
@@ -56,25 +57,26 @@ export class TopicResolverBase {
     };
   }
 
-  @graphql.Query(() => [Topic])
-  @nestAccessControl.UseRoles({
-    resource: "Topic",
-    action: "read",
-    possession: "any",
-  })
-  async topics(
-    @graphql.Args() args: TopicFindManyArgs,
-    @gqlUserRoles.UserRoles() userRoles: string[]
-  ): Promise<Topic[]> {
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "read",
-      possession: "any",
-      resource: "Topic",
-    });
-    const results = await this.service.findMany(args);
-    return results.map((result) => permission.filter(result));
-  }
+  // @graphql.Query(() => [Topic])
+  // @nestAccessControl.UseRoles({
+  //   resource: "Topic",
+  //   action: "read",
+  //   possession: "any",
+  // })
+  // @Public()
+  // async topics(
+  //   @graphql.Args() args: TopicFindManyArgs,
+  //   @gqlUserRoles.UserRoles() userRoles: string[]
+  // ): Promise<Topic[]> {
+  //   const permission = this.rolesBuilder.permission({
+  //     role: userRoles,
+  //     action: "read",
+  //     possession: "any",
+  //     resource: "Topic",
+  //   });
+  //   const results = await this.service.findMany(args);
+  //   return results.map((result) => permission.filter(result));
+  // }
 
   @graphql.Query(() => Topic, { nullable: true })
   @nestAccessControl.UseRoles({

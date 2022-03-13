@@ -1,0 +1,215 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input Credentials {
+  password: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type MetaQueryPayload {
+  count: String!
+}
+
+type Mutation {
+  createTopic(data: TopicCreateInput!): Topic!
+  createUser(data: UserCreateInput!): User!
+  deleteTopic(where: TopicWhereUniqueInput!): Topic!
+  deleteUser(where: UserWhereUniqueInput!): User!
+  login(credentials: Credentials!): UserInfo!
+  updateTopic(data: TopicUpdateInput!, where: TopicWhereUniqueInput!): Topic!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User!
+}
+
+type Query {
+  _topicsMeta(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): MetaQueryPayload!
+  _usersMeta(orderBy: UserOrderByInput, skip: Float, take: Float, where: UserWhereInput): MetaQueryPayload!
+  publicTopics(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): [Topic!]!
+  topic(where: TopicWhereUniqueInput!): Topic
+  user(where: UserWhereUniqueInput!): User
+  userInfo: UserInfo!
+  users(orderBy: UserOrderByInput, skip: Float, take: Float, where: UserWhereInput): [User!]!
+}
+
+enum QueryMode {
+  Default
+  Insensitive
+}
+
+enum SortOrder {
+  Asc
+  Desc
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: String
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: String
+  notIn: [String!]
+  startsWith: String
+}
+
+type Topic {
+  createdAt: DateTime!
+  dependOn(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): [Topic!]!
+  dependOnMe(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): [Topic!]!
+  id: String!
+  knownUsers(orderBy: UserOrderByInput, skip: Float, take: Float, where: UserWhereInput): [User!]!
+  updatedAt: DateTime!
+}
+
+input TopicCreateInput {
+  dependOn: TopicCreateNestedManyWithoutTopicsInput
+  dependOnMe: TopicCreateNestedManyWithoutTopicsInput
+  knownUsers: UserCreateNestedManyWithoutTopicsInput
+}
+
+input TopicCreateNestedManyWithoutTopicsInput {
+  connect: [TopicWhereUniqueInput!]
+}
+
+input TopicCreateNestedManyWithoutUsersInput {
+  connect: [TopicWhereUniqueInput!]
+}
+
+input TopicListRelationFilter {
+  every: TopicWhereInput
+  none: TopicWhereInput
+  some: TopicWhereInput
+}
+
+input TopicOrderByInput {
+  createdAt: SortOrder
+  id: SortOrder
+  updatedAt: SortOrder
+}
+
+input TopicUpdateInput {
+  dependOn: TopicUpdateManyWithoutTopicsInput
+  dependOnMe: TopicUpdateManyWithoutTopicsInput
+  knownUsers: UserUpdateManyWithoutTopicsInput
+}
+
+input TopicUpdateManyWithoutTopicsInput {
+  connect: [TopicWhereUniqueInput!]
+  disconnect: [TopicWhereUniqueInput!]
+  set: [TopicWhereUniqueInput!]
+}
+
+input TopicUpdateManyWithoutUsersInput {
+  connect: [TopicWhereUniqueInput!]
+  disconnect: [TopicWhereUniqueInput!]
+  set: [TopicWhereUniqueInput!]
+}
+
+input TopicWhereInput {
+  dependOn: TopicListRelationFilter
+  dependOnMe: TopicListRelationFilter
+  id: StringFilter
+  knownUsers: UserListRelationFilter
+}
+
+input TopicWhereUniqueInput {
+  id: String!
+}
+
+type User {
+  createdAt: DateTime!
+  firstName: String
+  id: String!
+  knownTopics(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): [Topic!]!
+  lastName: String
+  roles: [String!]!
+  updatedAt: DateTime!
+  username: String!
+}
+
+input UserCreateInput {
+  firstName: String
+  knownTopics: TopicCreateNestedManyWithoutUsersInput
+  lastName: String
+  password: String!
+  roles: [String!]!
+  username: String!
+}
+
+input UserCreateNestedManyWithoutTopicsInput {
+  connect: [UserWhereUniqueInput!]
+}
+
+type UserInfo {
+  accessToken: String
+  roles: [String!]!
+  username: String!
+}
+
+input UserListRelationFilter {
+  every: UserWhereInput
+  none: UserWhereInput
+  some: UserWhereInput
+}
+
+input UserOrderByInput {
+  createdAt: SortOrder
+  firstName: SortOrder
+  id: SortOrder
+  lastName: SortOrder
+  password: SortOrder
+  roles: SortOrder
+  updatedAt: SortOrder
+  username: SortOrder
+}
+
+input UserUpdateInput {
+  firstName: String
+  knownTopics: TopicUpdateManyWithoutUsersInput
+  lastName: String
+  password: String
+  roles: [String!]
+  username: String
+}
+
+input UserUpdateManyWithoutTopicsInput {
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+}
+
+input UserWhereInput {
+  firstName: StringNullableFilter
+  id: StringFilter
+  knownTopics: TopicListRelationFilter
+  lastName: StringNullableFilter
+  username: StringFilter
+}
+
+input UserWhereUniqueInput {
+  id: String!
+}
