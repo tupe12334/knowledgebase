@@ -12,7 +12,7 @@ https://docs.amplication.com/docs/how-to/custom-code
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { TopicCreateNestedManyWithoutTopicsInput } from "./TopicCreateNestedManyWithoutTopicsInput";
-import { ValidateNested, IsOptional } from "class-validator";
+import { ValidateNested, IsOptional, IsString } from "class-validator";
 import { Type } from "class-transformer";
 import { UserCreateNestedManyWithoutTopicsInput } from "./UserCreateNestedManyWithoutTopicsInput";
 @InputType()
@@ -43,6 +43,17 @@ class TopicCreateInput {
 
   @ApiProperty({
     required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  description?: string | null;
+
+  @ApiProperty({
+    required: false,
     type: () => UserCreateNestedManyWithoutTopicsInput,
   })
   @ValidateNested()
@@ -52,5 +63,16 @@ class TopicCreateInput {
     nullable: true,
   })
   knownUsers?: UserCreateNestedManyWithoutTopicsInput;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  title?: string | null;
 }
 export { TopicCreateInput };

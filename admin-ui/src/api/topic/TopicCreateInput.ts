@@ -4,5 +4,7 @@ import { UserCreateNestedManyWithoutTopicsInput } from "./UserCreateNestedManyWi
 export type TopicCreateInput = {
   dependOn?: TopicCreateNestedManyWithoutTopicsInput;
   dependOnMe?: TopicCreateNestedManyWithoutTopicsInput;
+  description?: string | null;
   knownUsers?: UserCreateNestedManyWithoutTopicsInput;
+  title?: string | null;
 };

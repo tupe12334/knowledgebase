@@ -76,7 +76,9 @@ export class TopicControllerBase {
       data: data,
       select: {
         createdAt: true,
+        description: true,
         id: true,
+        title: true,
         updatedAt: true,
       },
     });
@@ -112,7 +114,9 @@ export class TopicControllerBase {
       ...args,
       select: {
         createdAt: true,
+        description: true,
         id: true,
+        title: true,
         updatedAt: true,
       },
     });
@@ -147,7 +151,9 @@ export class TopicControllerBase {
       where: params,
       select: {
         createdAt: true,
+        description: true,
         id: true,
+        title: true,
         updatedAt: true,
       },
     });
@@ -203,7 +209,9 @@ export class TopicControllerBase {
         data: data,
         select: {
           createdAt: true,
+          description: true,
           id: true,
+          title: true,
           updatedAt: true,
         },
       });
@@ -239,7 +247,9 @@ export class TopicControllerBase {
         where: params,
         select: {
           createdAt: true,
+          description: true,
           id: true,
+          title: true,
           updatedAt: true,
         },
       });
@@ -281,7 +291,9 @@ export class TopicControllerBase {
       ...query,
       select: {
         createdAt: true,
+        description: true,
         id: true,
+        title: true,
         updatedAt: true,
       },
     });
@@ -456,7 +468,9 @@ export class TopicControllerBase {
       ...query,
       select: {
         createdAt: true,
+        description: true,
         id: true,
+        title: true,
         updatedAt: true,
       },
     });

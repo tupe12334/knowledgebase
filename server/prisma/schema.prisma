@@ -20,10 +20,12 @@ model User {
 }
 
 model Topic {
-  createdAt  DateTime @default(now())
-  dependOn   Topic[]  @relation(name: "dependOn")
-  dependOnMe Topic[]  @relation(name: "dependOn")
-  id         String   @id @default(cuid())
-  knownUsers User[]
-  updatedAt  DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  dependOn    Topic[]  @relation(name: "dependOn")
+  dependOnMe  Topic[]  @relation(name: "dependOn")
+  description String?
+  id          String   @id @default(cuid())
+  knownUsers  User[]
+  title       String?
+  updatedAt   DateTime @updatedAt
 }
