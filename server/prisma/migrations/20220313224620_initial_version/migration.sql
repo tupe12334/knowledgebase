@@ -15,7 +15,9 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Topic" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "description" TEXT,
     "id" TEXT NOT NULL,
+    "title" TEXT,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Topic_pkey" PRIMARY KEY ("id")

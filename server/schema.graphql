@@ -31,6 +31,7 @@ type Query {
   _usersMeta(orderBy: UserOrderByInput, skip: Float, take: Float, where: UserWhereInput): MetaQueryPayload!
   publicTopics(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): [Topic!]!
   topic(where: TopicWhereUniqueInput!): Topic
+  topics(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): [Topic!]!
   user(where: UserWhereUniqueInput!): User
   userInfo: UserInfo!
   users(orderBy: UserOrderByInput, skip: Float, take: Float, where: UserWhereInput): [User!]!
@@ -80,15 +81,19 @@ type Topic {
   createdAt: DateTime!
   dependOn(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): [Topic!]!
   dependOnMe(orderBy: TopicOrderByInput, skip: Float, take: Float, where: TopicWhereInput): [Topic!]!
+  description: String
   id: String!
   knownUsers(orderBy: UserOrderByInput, skip: Float, take: Float, where: UserWhereInput): [User!]!
+  title: String
   updatedAt: DateTime!
 }
 
 input TopicCreateInput {
   dependOn: TopicCreateNestedManyWithoutTopicsInput
   dependOnMe: TopicCreateNestedManyWithoutTopicsInput
+  description: String
   knownUsers: UserCreateNestedManyWithoutTopicsInput
+  title: String
 }
 
 input TopicCreateNestedManyWithoutTopicsInput {
@@ -107,14 +112,18 @@ input TopicListRelationFilter {
 
 input TopicOrderByInput {
   createdAt: SortOrder
+  description: SortOrder
   id: SortOrder
+  title: SortOrder
   updatedAt: SortOrder
 }
 
 input TopicUpdateInput {
   dependOn: TopicUpdateManyWithoutTopicsInput
   dependOnMe: TopicUpdateManyWithoutTopicsInput
+  description: String
   knownUsers: UserUpdateManyWithoutTopicsInput
+  title: String
 }
 
 input TopicUpdateManyWithoutTopicsInput {
@@ -132,8 +141,10 @@ input TopicUpdateManyWithoutUsersInput {
 input TopicWhereInput {
   dependOn: TopicListRelationFilter
   dependOnMe: TopicListRelationFilter
+  description: StringNullableFilter
   id: StringFilter
   knownUsers: UserListRelationFilter
+  title: StringNullableFilter
 }
 
 input TopicWhereUniqueInput {
