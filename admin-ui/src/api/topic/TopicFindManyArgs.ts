@@ -3,7 +3,7 @@ import { TopicOrderByInput } from "./TopicOrderByInput";
 
 export type TopicFindManyArgs = {
   where?: TopicWhereInput;
-  orderBy?: TopicOrderByInput;
+  orderBy?: Array<TopicOrderByInput>;
   skip?: number;
   take?: number;
 };

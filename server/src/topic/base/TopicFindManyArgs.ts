@@ -27,11 +27,11 @@ class TopicFindManyArgs {
 
   @ApiProperty({
     required: false,
-    type: TopicOrderByInput,
+    type: [TopicOrderByInput],
   })
-  @Field(() => TopicOrderByInput, { nullable: true })
+  @Field(() => [TopicOrderByInput], { nullable: true })
   @Type(() => TopicOrderByInput)
-  orderBy?: TopicOrderByInput;
+  orderBy?: Array<TopicOrderByInput>;
 
   @ApiProperty({
     required: false,

@@ -15,10 +15,10 @@ import * as apollo from "apollo-server-express";
 import * as nestAccessControl from "nest-access-control";
 import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as gqlACGuard from "../../auth/gqlAC.guard";
-import * as gqlUserRoles from "../../auth/gqlUserRoles.decorator";
-import * as abacUtil from "../../auth/abac.util";
 import { isRecordNotFoundError } from "../../prisma.util";
 import { MetaQueryPayload } from "../../util/MetaQueryPayload";
+import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
+import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { CreateTopicArgs } from "./CreateTopicArgs";
 import { UpdateTopicArgs } from "./UpdateTopicArgs";
 import { DeleteTopicArgs } from "./DeleteTopicArgs";
@@ -56,26 +56,18 @@ export class TopicResolverBase {
     };
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => [Topic])
   @nestAccessControl.UseRoles({
     resource: "Topic",
     action: "read",
     possession: "any",
   })
-  async topics(
-    @graphql.Args() args: TopicFindManyArgs,
-    @gqlUserRoles.UserRoles() userRoles: string[]
-  ): Promise<Topic[]> {
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "read",
-      possession: "any",
-      resource: "Topic",
-    });
-    const results = await this.service.findMany(args);
-    return results.map((result) => permission.filter(result));
+  async topics(@graphql.Args() args: TopicFindManyArgs): Promise<Topic[]> {
+    return this.service.findMany(args);
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => Topic, { nullable: true })
   @nestAccessControl.UseRoles({
     resource: "Topic",
@@ -83,60 +75,30 @@ export class TopicResolverBase {
     possession: "own",
   })
   async topic(
-    @graphql.Args() args: TopicFindUniqueArgs,
-    @gqlUserRoles.UserRoles() userRoles: string[]
+    @graphql.Args() args: TopicFindUniqueArgs
   ): Promise<Topic | null> {
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "read",
-      possession: "own",
-      resource: "Topic",
-    });
     const result = await this.service.findOne(args);
     if (result === null) {
       return null;
     }
-    return permission.filter(result);
+    return result;
   }
 
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @graphql.Mutation(() => Topic)
   @nestAccessControl.UseRoles({
     resource: "Topic",
     action: "create",
     possession: "any",
   })
-  async createTopic(
-    @graphql.Args() args: CreateTopicArgs,
-    @gqlUserRoles.UserRoles() userRoles: string[]
-  ): Promise<Topic> {
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "create",
-      possession: "any",
-      resource: "Topic",
-    });
-    const invalidAttributes = abacUtil.getInvalidAttributes(
-      permission,
-      args.data
-    );
-    if (invalidAttributes.length) {
-      const properties = invalidAttributes
-        .map((attribute: string) => JSON.stringify(attribute))
-        .join(", ");
-      const roles = userRoles
-        .map((role: string) => JSON.stringify(role))
-        .join(",");
-      throw new apollo.ApolloError(
-        `providing the properties: ${properties} on ${"Topic"} creation is forbidden for roles: ${roles}`
-      );
-    }
-    // @ts-ignore
+  async createTopic(@graphql.Args() args: CreateTopicArgs): Promise<Topic> {
     return await this.service.create({
       ...args,
       data: args.data,
     });
   }
 
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @graphql.Mutation(() => Topic)
   @nestAccessControl.UseRoles({
     resource: "Topic",
@@ -144,32 +106,9 @@ export class TopicResolverBase {
     possession: "any",
   })
   async updateTopic(
-    @graphql.Args() args: UpdateTopicArgs,
-    @gqlUserRoles.UserRoles() userRoles: string[]
+    @graphql.Args() args: UpdateTopicArgs
   ): Promise<Topic | null> {
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "update",
-      possession: "any",
-      resource: "Topic",
-    });
-    const invalidAttributes = abacUtil.getInvalidAttributes(
-      permission,
-      args.data
-    );
-    if (invalidAttributes.length) {
-      const properties = invalidAttributes
-        .map((attribute: string) => JSON.stringify(attribute))
-        .join(", ");
-      const roles = userRoles
-        .map((role: string) => JSON.stringify(role))
-        .join(",");
-      throw new apollo.ApolloError(
-        `providing the properties: ${properties} on ${"Topic"} update is forbidden for roles: ${roles}`
-      );
-    }
     try {
-      // @ts-ignore
       return await this.service.update({
         ...args,
         data: args.data,
@@ -194,7 +133,6 @@ export class TopicResolverBase {
     @graphql.Args() args: DeleteTopicArgs
   ): Promise<Topic | null> {
     try {
-      // @ts-ignore
       return await this.service.delete(args);
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -206,6 +144,7 @@ export class TopicResolverBase {
     }
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => [Topic])
   @nestAccessControl.UseRoles({
     resource: "Topic",
@@ -214,24 +153,18 @@ export class TopicResolverBase {
   })
   async dependOn(
     @graphql.Parent() parent: Topic,
-    @graphql.Args() args: TopicFindManyArgs,
-    @gqlUserRoles.UserRoles() userRoles: string[]
+    @graphql.Args() args: TopicFindManyArgs
   ): Promise<Topic[]> {
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "read",
-      possession: "any",
-      resource: "Topic",
-    });
     const results = await this.service.findDependOn(parent.id, args);
 
     if (!results) {
       return [];
     }
 
-    return results.map((result) => permission.filter(result));
+    return results;
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => [Topic])
   @nestAccessControl.UseRoles({
     resource: "Topic",
@@ -240,47 +173,34 @@ export class TopicResolverBase {
   })
   async dependOnMe(
     @graphql.Parent() parent: Topic,
-    @graphql.Args() args: TopicFindManyArgs,
-    @gqlUserRoles.UserRoles() userRoles: string[]
+    @graphql.Args() args: TopicFindManyArgs
   ): Promise<Topic[]> {
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "read",
-      possession: "any",
-      resource: "Topic",
-    });
     const results = await this.service.findDependOnMe(parent.id, args);
 
     if (!results) {
       return [];
     }
 
-    return results.map((result) => permission.filter(result));
+    return results;
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => [User])
   @nestAccessControl.UseRoles({
-    resource: "Topic",
+    resource: "User",
     action: "read",
     possession: "any",
   })
   async knownUsers(
     @graphql.Parent() parent: Topic,
-    @graphql.Args() args: UserFindManyArgs,
-    @gqlUserRoles.UserRoles() userRoles: string[]
+    @graphql.Args() args: UserFindManyArgs
   ): Promise<User[]> {
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "read",
-      possession: "any",
-      resource: "User",
-    });
     const results = await this.service.findKnownUsers(parent.id, args);
 
     if (!results) {
       return [];
     }
 
-    return results.map((result) => permission.filter(result));
+    return results;
   }
 }
